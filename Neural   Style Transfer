@@ -1,0 +1,36 @@
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torchvision import transforms, models
+
+# Load the images
+content_image = # ... (load content image)
+style_image = # ... (load style image)
+
+# Preprocess the images
+content_image = transforms.ToTensor()(content_image)
+style_image = transforms.ToTensor()(style_image)
+
+# Load the pre-trained VGG19 model
+cnn = models.vgg19(pretrained=True).features
+
+# Define the content and style layers
+content_layers = [4, 9, 15, 20]
+style_layers = [0, 5, 10, 19]
+
+# Extract features
+content_features = [cnn(content_image[:i+1]) for i in content_layers]
+style_features = [cnn(style_image[:i+1]) for i in style_layers]
+
+# Define the loss functions
+content_loss = nn.MSELoss()
+style_loss = nn.MSELoss()
+
+# Optimize the generated image
+generated_image = content_image.clone().requires_grad_()
+optimizer = optim.Adam([generated_image], lr=0.001)
+
+for epoch in range(num_epochs):
+    # ... (calculate content and style losses, update generated image)
+
+# Display or save the generated image
